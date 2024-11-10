@@ -1,7 +1,7 @@
 // pages/blog/[id].js
 import { client } from "../../libs/client";
 import styles from "../../styles/Home.module.scss";
-import { Blog, BlogProps} from "../types/blog";
+import { Blog, BlogProps } from "../../types/blog";
 import { GetStaticProps, GetStaticPropsContext, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
 
@@ -32,8 +32,10 @@ export const getStaticPaths = async () => {
 // データをテンプレートに受け渡す部分の処理を記述します
 type Params = ParsedUrlQuery & {
   id?: string;
-}
-export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext<Params>) => {
+};
+export const getStaticProps: GetStaticProps = async (
+  context: GetStaticPropsContext<Params>
+) => {
   const { id } = context.params ?? {};
 
   // id が string でない場合はエラーハンドリング（例: 404 ページを返す）
