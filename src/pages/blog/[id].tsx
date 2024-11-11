@@ -1,11 +1,16 @@
 // pages/blog/[id].js
-import { client } from "../../libs/client";
-import styles from "../../styles/Home.module.scss";
-import { Blog, BlogProps } from "../../types/blog";
+import { client } from "@/libs/client";
+import styles from "@/styles/Home.module.scss";
+import { Blog } from "@/types/blog";
 import { GetStaticProps, GetStaticPropsContext, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
+import { MicroCMSListContent } from "microcms-js-sdk";
 
-const BlogId: NextPage<BlogProps> = ({ blog }) => {
+type BlogDetailProps = {
+  blog: Blog & MicroCMSListContent;
+};
+
+const BlogId: NextPage<BlogDetailProps> = ({ blog }) => {
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{blog.title}</h1>
@@ -21,15 +26,13 @@ const BlogId: NextPage<BlogProps> = ({ blog }) => {
   );
 };
 
-// 静的生成のためのパスを指定します
 export const getStaticPaths = async () => {
-  const data = await client.get({ endpoint: "blog" });
+  const data = await client.getList<Blog>({ endpoint: "blog" });
 
-  const paths = data.contents.map((content: Blog) => `/blog/${content.id}`);
+  const paths = data.contents.map((content: Blog & MicroCMSListContent) => `/blog/${content.id}`);
   return { paths, fallback: false };
 };
 
-// データをテンプレートに受け渡す部分の処理を記述します
 type Params = ParsedUrlQuery & {
   id?: string;
 };
@@ -45,7 +48,7 @@ export const getStaticProps: GetStaticProps = async (
     };
   }
 
-  const data = await client.get({ endpoint: "blog", contentId: id });
+  const data = await client.getListDetail<Blog>({ endpoint: "blog", contentId: id });
 
   return {
     props: {
