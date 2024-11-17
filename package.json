@@ -16,6 +16,7 @@
     "eslint": "^8.50.0",
     "eslint-config-next": "15.0.1",
     "microcms-js-sdk": "^3.1.2",
+    "modern-css-reset": "^1.4.0",
     "next": "^13.1.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
