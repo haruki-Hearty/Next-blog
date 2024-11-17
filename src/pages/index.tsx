@@ -4,6 +4,8 @@ import { client } from "@/libs/client";
 import { GetStaticProps, GetStaticPropsContext, NextPage } from "next";
 import { Blog } from "@/types/blog";
 import { MicroCMSListResponse } from "microcms-js-sdk";
+import { BlogCard } from "@/components/blogcard/BlogCard";
+import styles from "@/styles/Home.module.scss";
 
 type HomeProps = {
   blog: MicroCMSListResponse<Blog>;
@@ -16,10 +18,12 @@ type HomeProps = {
 const Home: NextPage<HomeProps> = ({ blog }) => {
   return (
     <div>
-      <ul>
+      <ul className={styles.blogLists}>
         {blog.contents.map((blog) => (
-          <li key={blog.id}>
-            <Link href={`/blog/${blog.id}`}>{blog.title}</Link>
+          <li className={styles.blogList} key={blog.id}>
+            <Link href={`/blog/${blog.id}`}>
+              <BlogCard blog={blog} />
+            </Link>
           </li>
         ))}
       </ul>
