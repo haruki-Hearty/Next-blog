@@ -13,6 +13,7 @@ export type Thumbnail = {
 export type Blog = {
   title: string;
   body: string;
+  alt: string;
   thumbnail: Thumbnail & MicroCMSImage;
   category: Category & MicroCMSListContent; //MicroCMSListContentの型定義を&で追加している
 };

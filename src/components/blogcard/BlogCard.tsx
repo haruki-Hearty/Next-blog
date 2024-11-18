@@ -12,7 +12,7 @@ export const BlogCard: NextPage<BlogProps> = (props) => {
   return (
     <>
       <div className={styles.imgInner}>
-        <Image src={blog.thumbnail.url} width={blog.thumbnail.width} height={blog.thumbnail.height} alt="サンプル" />
+        <Image src={blog.thumbnail.url} width={blog.thumbnail.width} height={blog.thumbnail.height} alt={blog.alt} />
       </div>
       <h2 className={styles.title}>{blog.title}</h2>
       <div className={styles.category}>{blog.category.name}</div>
