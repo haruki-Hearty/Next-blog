@@ -32,7 +32,12 @@ const Home: NextPage<HomeProps> = ({ blog }) => {
 };
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const data = await client.getList<Blog>({ endpoint: "blog" });
+  const data = await client.getList<Blog>({
+    endpoint: "blog",
+    queries: {
+      fields: "id,title,thumbnail,alt,category",
+    },
+  });
   return {
     props: {
       blog: data,
