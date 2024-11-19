@@ -2,13 +2,13 @@
 import Link from "next/link";
 import { client } from "@/libs/client";
 import { GetStaticProps, GetStaticPropsContext, NextPage } from "next";
-import { Blog } from "@/types/blog";
+import { BlogList } from "@/types/blog";
 import { MicroCMSListResponse } from "microcms-js-sdk";
 import { BlogCard } from "@/components/blogcard/BlogCard";
 import styles from "@/styles/Home.module.scss";
 
 type HomeProps = {
-  blog: MicroCMSListResponse<Blog>;
+  blog: MicroCMSListResponse<BlogList>;
 };
 
 /**
@@ -32,7 +32,7 @@ const Home: NextPage<HomeProps> = ({ blog }) => {
 };
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const data = await client.getList<Blog>({
+  const data = await client.getList<BlogList>({
     endpoint: "blog",
     queries: {
       fields: "id,title,thumbnail,alt,category",

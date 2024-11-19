@@ -1,13 +1,13 @@
 // pages/blog/[id].js
 import { client } from "@/libs/client";
 import styles from "@/styles/Home.module.scss";
-import { Blog } from "@/types/blog";
+import { BlogDetail } from "@/types/blog";
 import { GetStaticProps, GetStaticPropsContext, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { MicroCMSListContent } from "microcms-js-sdk";
 
 type BlogDetailProps = {
-  blog: Blog & MicroCMSListContent;
+  blog: BlogDetail & MicroCMSListContent;
 };
 
 const BlogId: NextPage<BlogDetailProps> = ({ blog }) => {
@@ -27,9 +27,9 @@ const BlogId: NextPage<BlogDetailProps> = ({ blog }) => {
 };
 
 export const getStaticPaths = async () => {
-  const data = await client.getList<Blog>({ endpoint: "blog" });
+  const data = await client.getList<BlogDetail>({ endpoint: "blog" });
 
-  const paths = data.contents.map((content: Blog & MicroCMSListContent) => `/blog/${content.id}`);
+  const paths = data.contents.map((content: BlogDetail & MicroCMSListContent) => `/blog/${content.id}`);
   return { paths, fallback: false };
 };
 
@@ -48,7 +48,7 @@ export const getStaticProps: GetStaticProps = async (
     };
   }
 
-  const data = await client.getListDetail<Blog>({ endpoint: "blog", contentId: id });
+  const data = await client.getListDetail<BlogDetail>({ endpoint: "blog", contentId: id });
 
   return {
     props: {

@@ -4,10 +4,12 @@ export type Category = {
   name: string;
 };
 
-export type Blog = {
+export type BlogList = {
   title: string;
-  body: string;
   alt: string;
   thumbnail: MicroCMSImage;
   category: Category & MicroCMSListContent; //MicroCMSListContentの型定義を&で追加している
 };
+export type BlogDetail = {
+  body?: string;
+} & BlogList;
