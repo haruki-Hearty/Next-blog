@@ -1,10 +1,10 @@
-import { BlogDetail } from "@/types/blog";
+import { Blog } from "@/types/blog";
 import { NextPage } from "next";
 import Image from "next/image";
 import styles from "./BlogCard.module.scss"
 
 type BlogProps = {
-  blog: BlogDetail;
+  blog: Blog;
 }
 
 export const BlogCard: NextPage<BlogProps> = (props) => {
