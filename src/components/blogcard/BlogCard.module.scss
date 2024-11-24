@@ -1,0 +1,18 @@
+.imgInner {
+  & img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 /9;
+    object-fit: cover;
+  }
+}
+
+.title {
+  margin: 0;
+}
+
+ .category {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+ }

@@ -38,3 +38,26 @@
     list-style-position: inside;
   }
 }
+
+.blogLists {
+  display: grid;
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  column-gap: 1.5rem;
+  row-gap: 5rem;
+}
+.blogList {
+  display: grid;
+  list-style: none;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  & a {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
+    row-gap: 1rem;
+  }
+}
