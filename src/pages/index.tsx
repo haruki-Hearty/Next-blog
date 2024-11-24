@@ -1,7 +1,7 @@
 // pages/index.js
 import Link from "next/link";
 import { client } from "@/libs/client";
-import { GetStaticProps, GetStaticPropsContext, NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import { BlogList } from "@/types/blog";
 import { MicroCMSListResponse } from "microcms-js-sdk";
 import { BlogCard } from "@/components/blogcard/BlogCard";
