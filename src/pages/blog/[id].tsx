@@ -29,8 +29,11 @@ const BlogId: NextPage<BlogDetailProps> = ({ blog }) => {
 export const getStaticPaths = async () => {
   const data = await client.getList<Blog>({ endpoint: "blog" });
 
-  const paths = data.contents.map((content: Blog & MicroCMSListContent) => `/blog/${content.id}`);
-  return { paths, fallback: false };
+  const paths = data.contents.map(
+    (content: Blog & MicroCMSListContent) => `/blog/${content.id}`
+  );
+  //fallback: 'blocking' キャッシュがまだ作られていないときはSSRを行う
+  return { paths, fallback: 'blocking' };
 };
 
 type Params = ParsedUrlQuery & {
@@ -48,12 +51,16 @@ export const getStaticProps: GetStaticProps = async (
     };
   }
 
-  const data = await client.getListDetail<Blog>({ endpoint: "blog", contentId: id });
+  const data = await client.getListDetail<Blog>({
+    endpoint: "blog",
+    contentId: id,
+  });
 
   return {
     props: {
       blog: data,
     },
+    // revalidate: 60, // 60秒で再生成
   };
 };
 
