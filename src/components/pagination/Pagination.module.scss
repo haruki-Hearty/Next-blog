@@ -1,0 +1,21 @@
+.pageList {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  gap: 20px;
+}
+
+.currentStyle {
+  background-color: #16abff;
+  color: white;
+}
+
+.pageList a {
+  font-size: 20px;
+  padding: 5px;
+}
+
+.disabled {
+  pointer-events: none;
+  color: gray;
+}

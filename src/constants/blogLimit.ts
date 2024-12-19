@@ -1,1 +1,1 @@
-export const BLOG_LIMIT = 6;
+export const BLOG_LIMIT = 2;

@@ -5,14 +5,17 @@ import { MicroCMSListResponse } from "microcms-js-sdk";
 import styles from "@/styles/Home.module.scss";
 import Link from "next/link";
 import { BlogCard } from "@/components/blogcard/BlogCard";
+import { Pagination } from "@/components/pagination/Pagination";
 import { ParsedUrlQuery } from "querystring";
 import { BLOG_LIMIT } from "@/constants/blogLimit";
 
 type HomeProps = {
   blog: MicroCMSListResponse<BlogList>;
+  //MicroCMSListResponsをtotalCountでも使用したかったが、getStaticPropsでエラーが出た
+  totalCount: number;
 };
 
-const Home: NextPage<HomeProps> = ({ blog }) => {
+const Home: NextPage<HomeProps> = ({ blog, totalCount }) => {
   return (
     <div>
       <h1>ブログ一覧</h1>
@@ -25,6 +28,7 @@ const Home: NextPage<HomeProps> = ({ blog }) => {
           </li>
         ))}
       </ul>
+      <Pagination totalCount={totalCount} />
     </div>
   );
 };
@@ -38,7 +42,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
    * 現在は空の配列が指定されており、事前生成されるページはありません。
    * fallback: 'blocking' キャッシュがまだ作られていないときはSSRを行う
    */
-  
+
   return { paths: [], fallback: "blocking" };
 };
 
@@ -62,6 +66,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
   return {
     props: {
       blog: data,
+      totalCount: data.totalCount,
     },
   };
 };
