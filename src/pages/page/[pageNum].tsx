@@ -11,11 +11,13 @@ import { BLOG_LIMIT } from "@/constants/blogLimit";
 
 type HomeProps = {
   blog: MicroCMSListResponse<BlogList>;
+  limit: number;
   //MicroCMSListResponsをtotalCountでも使用したかったが、getStaticPropsでエラーが出た
   totalCount: number;
 };
 
-const Home: NextPage<HomeProps> = ({ blog, totalCount }) => {
+
+const Home: NextPage<HomeProps> = ({ blog, totalCount, limit }) => {
   return (
     <div>
       <h1>ブログ一覧</h1>
@@ -28,7 +30,7 @@ const Home: NextPage<HomeProps> = ({ blog, totalCount }) => {
           </li>
         ))}
       </ul>
-      <Pagination totalCount={totalCount} />
+      <Pagination totalCount={totalCount} limit={limit}/>
     </div>
   );
 };
@@ -53,6 +55,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
   // ルートのパラメータpageNumを取得します。例えば、URLが/page/1の場合、pageNumは1になります。offsetで使用している paramsが無い時はどんな時？
   const pageNum = Number(params?.pageNum);
+
   //offsetのデフォルトは０なので、pageNumから−１をしている
   const offset = (pageNum - 1) * BLOG_LIMIT;
   const data = await client.getList<BlogList>({
@@ -67,6 +70,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
     props: {
       blog: data,
       totalCount: data.totalCount,
+      limit: BLOG_LIMIT,
     },
   };
 };

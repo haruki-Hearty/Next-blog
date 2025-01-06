@@ -19,3 +19,35 @@
   pointer-events: none;
   color: gray;
 }
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.paginationButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.paginationPage {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.paginationPage.active {
+  background-color: #0070f3;
+  color: #fff;
+  font-weight: bold;
+}
+
+.paginationEllipsis {
+  padding: 0.5rem 1rem;
+}
