@@ -44,7 +44,17 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
    * 現在は空の配列が指定されており、事前生成されるページはありません。
    * fallback: 'blocking' キャッシュがまだ作られていないときはSSRを行う
    */
+ // 総ページ数を計算してパスを生成
+ const totalCount = await client.getList<BlogList>({
+  endpoint: "blog",
+  queries: { fields: "id" },
+}).then((res) => res.totalCount);
 
+const totalPages = Math.ceil(totalCount / BLOG_LIMIT);
+
+const paths = Array.from({ length: totalPages }, (_, i) => ({
+  params: { pageNum: String(i + 1) },
+}));
   return { paths: [], fallback: "blocking" };
 };
 
@@ -55,7 +65,23 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
   // ルートのパラメータpageNumを取得します。例えば、URLが/page/1の場合、pageNumは1になります。offsetで使用している paramsが無い時はどんな時？
   const pageNum = Number(params?.pageNum);
+   // ページ番号が無効（数字でない、1未満）の場合は404
+   if (isNaN(pageNum) || pageNum < 1) {
+    return { notFound: true };
+  }
 
+  // 総ページ数を取得（ブログ全体の件数が必要）
+  const totalCount = await client.getList<BlogList>({
+    endpoint: "blog",
+    queries: { fields: "id" },
+  }).then((res) => res.totalCount);
+
+  const totalPages = Math.ceil(totalCount / BLOG_LIMIT);
+
+  // ページ番号が範囲外の場合は404
+  if (pageNum > totalPages) {
+    return { notFound: true };
+  }
   //offsetのデフォルトは０なので、pageNumから−１をしている
   const offset = (pageNum - 1) * BLOG_LIMIT;
   const data = await client.getList<BlogList>({
