@@ -1,9 +1,16 @@
+import { NextPage } from "next";
+
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { BLOG_LIMIT } from "@/constants/blogLimit";
 import styles from "./Pagination.module.scss";
 
-export const Pagination = ({ totalCount, limit }) => {
+type PaginationProps = {
+  totalCount: number;
+  limit: number;
+}
+
+export const Pagination = ({ totalCount, limit }: PaginationProps) => {
   //全部で何ページのページネーションにするかの計算
   const totalPages = Math.ceil(totalCount / limit);
   // 現在のページ番号を取得
@@ -44,7 +51,6 @@ export const Pagination = ({ totalCount, limit }) => {
       <ul className={styles.pagination}>
         <li>
           <Link
-            disabled={currentPage === 1}
             href={currentPage > 1 ? `/page/${currentPage - 1}` : "#"}
             className={`${styles.paginationButton} ${
               currentPage === 1 ? styles.disabled : ""
@@ -75,7 +81,6 @@ export const Pagination = ({ totalCount, limit }) => {
 
         <li>
           <Link
-            disabled={currentPage === totalPages}
             href={currentPage >= 1 ? `/page/${currentPage + 1}` : "#"}
             className={`${styles.paginationButton} ${
               currentPage === totalPages ? styles.disabled : ""
