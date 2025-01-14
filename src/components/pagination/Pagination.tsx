@@ -8,18 +8,12 @@ import styles from "./Pagination.module.scss";
 type PaginationProps = {
   totalCount: number;
   limit: number;
+  currentPage: number;
 }
 
-export const Pagination = ({ totalCount, limit }: PaginationProps) => {
+export const Pagination = ({ totalCount, limit, currentPage }: PaginationProps) => {
   //全部で何ページのページネーションにするかの計算
   const totalPages = Math.ceil(totalCount / limit);
-  // 現在のページ番号を取得
-  const router = useRouter();
-  /**
-   * ||の代わりに??を使うことで、undefinedまたはnullの場合のみデフォルト値を適用できます。
-   * ??は、0や空文字列（""）を「有効な値」として扱うため、意図しないデフォルト値の適用を防ぎます。
-   */
-  const currentPage = Number(router.query.pageNum ?? 1);
 
   const getPageNumbers = () => {
     const pageNumbers = [];

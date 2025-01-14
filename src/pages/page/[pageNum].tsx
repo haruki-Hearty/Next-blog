@@ -10,14 +10,15 @@ import { ParsedUrlQuery } from "querystring";
 import { BLOG_LIMIT } from "@/constants/blogLimit";
 
 type HomeProps = {
+  //MicroCMSListResponsをtotalCountでも使用したかったが、getStaticPropsでエラーが出た
   blog: MicroCMSListResponse<BlogList>;
   limit: number;
-  //MicroCMSListResponsをtotalCountでも使用したかったが、getStaticPropsでエラーが出た
   totalCount: number;
+  currentPage: number;
 };
 
 
-const Home: NextPage<HomeProps> = ({ blog, totalCount, limit }) => {
+const Home: NextPage<HomeProps> = ({ blog, totalCount, limit, currentPage }) => {
   return (
     <div>
       <h1>ブログ一覧</h1>
@@ -30,7 +31,8 @@ const Home: NextPage<HomeProps> = ({ blog, totalCount, limit }) => {
           </li>
         ))}
       </ul>
-      <Pagination totalCount={totalCount} limit={limit}/>
+      {/* Paginationコンポーネントの中で型定義がされてないと親コンポーネントでエラーが出る？ */}
+      <Pagination totalCount={totalCount} limit={limit} currentPage={currentPage}/>
     </div>
   );
 };
@@ -64,7 +66,7 @@ const paths = Array.from({ length: totalPages }, (_, i) => ({
  */
 export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
   // ルートのパラメータpageNumを取得します。例えば、URLが/page/1の場合、pageNumは1になります。offsetで使用している paramsが無い時はどんな時？
-  const pageNum = Number(params?.pageNum);
+  const pageNum = Number(params?.pageNum ?? 1);
    // ページ番号が無効（数字でない、1未満）の場合は404
    if (isNaN(pageNum) || pageNum < 1) {
     return { notFound: true };
@@ -97,6 +99,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
       blog: data,
       totalCount: data.totalCount,
       limit: BLOG_LIMIT,
+      currentPage: pageNum,
     },
   };
 };
