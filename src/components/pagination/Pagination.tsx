@@ -60,7 +60,6 @@ export const Pagination = ({
   };
 
   const numbers = paginationNumbers();
-  console.log(numbers, "left:" + hasLeftEllipsis, "right:" + hasRightEllipsis);
   return (
     <>
       <ul className={styles.pagination}>
