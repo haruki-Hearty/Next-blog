@@ -1,123 +1,88 @@
 import { NextPage } from "next";
-
-import { useRouter } from "next/router";
+import { Fragment } from "react";
+import { range } from "@/utils/range";
 import Link from "next/link";
-import { BLOG_LIMIT } from "@/constants/blogLimit";
 import styles from "./Pagination.module.scss";
 
 type PaginationProps = {
   totalCount: number;
   limit: number;
   currentPage: number;
-}
+};
 
-export const Pagination = ({ totalCount, limit, currentPage }: PaginationProps) => {
+export const Pagination = ({
+  totalCount,
+  limit,
+  currentPage,
+}: PaginationProps) => {
   //全部で何ページのページネーションにするかの計算
   const totalPages = Math.ceil(totalCount / limit);
 
-  const getPageNumbers = () => {
-    const pageNumbers = [];
-    //現在のページを中心に表示する範囲
-    const range = 2;
+  // ページネーションの長さ　一旦propsではなくココに記述
+  const maxNumLength = 7;
+  // 表示数の半分
+  const halfMaxNumLength = Math.floor(maxNumLength / 2);
 
-    for (let i = 1; i <= totalPages; i++) {
-      if (
-        //最初のページ
-        i === 1 ||
-        // 最後のページ
-        i === totalPages ||
-        // 現在のページの前後範囲 
-        (i >= currentPage - range && i <= currentPage + range)
-      ) {
-        //ページ番号 i を配列に追加します。
-        pageNumbers.push(i);
-        // 配列の最後の要素が null ではないことを確認します。これにより、連続して null を追加するのを防ぎます。
-      } else if (pageNumbers[pageNumbers.length - 1] !== null) {
-        // 表示しない部分に null を挿入します。
-        pageNumbers.push(null);
-      }
+  // 左側に省略記号を出す条件,半分を超えたページから表示
+  const hasLeftEllipsis =
+    totalPages > maxNumLength &&
+    maxNumLength >= 7 &&
+    currentPage > halfMaxNumLength;
+
+  //右の省略記号は最終ページから表示数の半分を引いたページまで表示
+  const hasRightEllipsis =
+    totalPages > maxNumLength &&
+    maxNumLength >= 7 &&
+    currentPage < totalPages - halfMaxNumLength;
+
+  const paginationNumbers = () => {
+    // ページ数がmaxNumLength以下の場合は全て表示する
+    if (totalPages <= maxNumLength) {
+      return range(1, totalPages);
     }
-    return pageNumbers;
+    // < 1 2 3 4 5 … 10 > のように省略記号が右のみの場合
+    if (!hasLeftEllipsis && hasRightEllipsis) {
+      //例: maxNumLength = 7, totalPages = 10 の場合 → [1, 2, 3, 4, 5, 10]
+      return [...range(1, maxNumLength - 2), totalPages];
+    }
+    // < 1 … 6 7 8 9 10 > のように省略記号が左のみの場合
+    if (hasLeftEllipsis && !hasRightEllipsis) {
+      //最初の1と最後のtotalPagesは固定、Math.round(maxNumLength / 2) は maxNumLength を2で割って四捨五入した値です。
+      return [
+        1,
+        ...range(totalPages - Math.round(maxNumLength / 2), totalPages),
+      ];
+    }
+    // < 1 … 5 6 7 … 10 > のように省略記号が両方の場合
+    const startNum = currentPage - (halfMaxNumLength - 2); // 最初のページと省略記号を除いたページ数
+    const endNum = currentPage + (halfMaxNumLength - 2); // 最後のページと省略記号を除いたページ数
+    return [1, ...range(startNum, endNum), totalPages];
   };
 
+  const numbers = paginationNumbers();
+  console.log(numbers, "left:" + hasLeftEllipsis, "right:" + hasRightEllipsis);
   return (
-    <nav>
+    <>
       <ul className={styles.pagination}>
-        <li>
-          <Link
-            href={currentPage > 1 ? `/page/${currentPage - 1}` : "#"}
-            className={`${styles.paginationButton} ${
-              currentPage === 1 ? styles.disabled : ""
-            }`}
-          >
-            前へ
-          </Link>
-        </li>
-
-        {getPageNumbers().map((page, index) =>
-          page === null ? (
-            <span key={index} className={styles.paginationEllipsis}>
-              ...
-            </span>
-          ) : (
-            <li key={index}>
-              <Link
-                href={`/page/${page}`}
-                className={`${styles.paginationPage} ${
-                  page === currentPage ? styles.active : ""
-                }`}
-              >
-                {page}
-              </Link>
-            </li>
-          )
-        )}
-
-        <li>
-          <Link
-            href={currentPage >= 1 ? `/page/${currentPage + 1}` : "#"}
-            className={`${styles.paginationButton} ${
-              currentPage === totalPages ? styles.disabled : ""
-            }`}
-          >
-            次へ
-          </Link>
-        </li>
+        {numbers.map((number) => {
+          return (
+            <Fragment key={number}>
+              {hasRightEllipsis && number === totalPages && <li>...</li>}
+              <li>
+                <Link
+                  href={`/page/${number}`}
+                  className={`${styles.paginationPage} ${
+                    number === currentPage ? styles.active : ""
+                  }`}
+                >
+                  {number}
+                </Link>
+              </li>
+              {hasLeftEllipsis && number === 1 && <li>...</li>}
+            </Fragment>
+          );
+        })}
       </ul>
-    </nav>
+    </>
   );
 };
-// export const Pagination = ({ totalCount }) => {
-//   //1ページに何枚表示するか
-//   const PER_PAGE = BLOG_LIMIT;
-
-//   // 現在のページ番号を取得
-//   const router = useRouter();
-//   const currentPage = parseInt(router.query.pageNum || "1", 10);
-
-//   const range = (start, end) =>
-//     /**
-//      * スプレッド構文で展開し、未定義の要素を埋める。
-//      */
-//     [...Array(end - start + 1)].map((_, i) => start + i);
-//   return (
-//     <ul className={styles.pageList}>
-//       <li>
-//         <Link href={currentPage > 1 ? `/page/${currentPage - 1}` : "#"} className={currentPage === 1 ? styles.disabled : ""}>
-//           前へ
-//         </Link>
-//       </li>
-//       {range(1, Math.ceil(totalCount / PER_PAGE)).map((number) => (
-//         <li
-//           className={currentPage === number ? styles.currentStyle : ""}
-//           key={number}
-//         >
-//           <Link href={`/page/${number}`}>{number}</Link>
-//         </li>
-//       ))}
-//       <li>
-//         <Link href={currentPage >= 1 ? `/page/${currentPage + 1}` : "#"} className={currentPage === (totalCount / PER_PAGE) ? styles.disabled : ""}>次へ</Link>
-//       </li>
-//     </ul>
-//   );
-// };
