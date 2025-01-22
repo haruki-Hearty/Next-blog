@@ -1,4 +1,5 @@
-import { MicroCMSListContent, MicroCMSImage } from "microcms-js-sdk";
+import { MicroCMSListContent, MicroCMSImage, MicroCMSListResponse } from "microcms-js-sdk";
+
 
 export type Category = {
   name: string;
@@ -13,4 +14,4 @@ export type Blog = {
   body: string;
   thumbnail: MicroCMSImage;
   category: Category & MicroCMSListContent; //MicroCMSListContentの型定義を&で追加している
-};
+} & MicroCMSListResponse<BlogList>;

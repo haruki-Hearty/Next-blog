@@ -32,10 +32,14 @@ const Home: NextPage<HomeProps> = ({ blog }) => {
 };
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const pageNum = 1;
+  const offset = (pageNum - 1) * 6;
   const data = await client.getList<BlogList>({
     endpoint: "blog",
     queries: {
       fields: "id,title,thumbnail,alt,category",
+      limit: 6,
+      offset,
     },
   });
   return {
