@@ -1,20 +1,29 @@
 // pages/blog/[id].js
 import { client } from "@/libs/client";
-import styles from "@/styles/Home.module.scss";
+import styles from "@/styles/Blog-details.module.scss";
 import { Blog } from "@/types/blog";
 import { GetStaticProps, GetStaticPropsContext, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { MicroCMSListContent } from "microcms-js-sdk";
+import Image from "next/image";
 
 type BlogDetailProps = {
   blog: Blog & MicroCMSListContent;
 };
-
 const BlogId: NextPage<BlogDetailProps> = ({ blog }) => {
+  const date = blog.publishedAt? new Date(blog.publishedAt).toLocaleDateString() : "";
   return (
     <main className={styles.main}>
+      <div className={styles.imgInner}>
+        <Image
+          src={blog.thumbnail.url}
+          width={blog.thumbnail.width}
+          height={blog.thumbnail.height}
+          alt={blog.alt}
+        />
+      </div>
       <h1 className={styles.title}>{blog.title}</h1>
-      <p className={styles.publishedAt}>{blog.publishedAt}</p>
+      <p className={styles.publishedAt}>{date}</p>
       <p>{blog.category && blog.category.name}</p>
       <div
         dangerouslySetInnerHTML={{
@@ -33,7 +42,7 @@ export const getStaticPaths = async () => {
     (content: Blog & MicroCMSListContent) => `/blog/${content.id}`
   );
   //fallback: 'blocking' キャッシュがまだ作られていないときはSSRを行う
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: "blocking" };
 };
 
 type Params = ParsedUrlQuery & {

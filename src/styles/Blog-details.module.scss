@@ -1,0 +1,14 @@
+.imgInner {
+  & img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 /9;
+    object-fit: cover;
+  }
+}
+
+.main {
+  max-width: 960px;
+  width: 90%;
+  margin: 0 auto;
+}
