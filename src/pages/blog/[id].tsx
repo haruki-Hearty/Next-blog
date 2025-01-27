@@ -12,6 +12,7 @@ type BlogDetailProps = {
 };
 const BlogId: NextPage<BlogDetailProps> = ({ blog }) => {
   const date = blog.publishedAt? new Date(blog.publishedAt).toLocaleDateString() : "";
+  
   return (
     <main className={styles.main}>
       <div className={styles.imgInner}>
